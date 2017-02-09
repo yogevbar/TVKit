@@ -1,12 +1,13 @@
 {
   "name": "TVKit",
   "version": "0.1.0",
-  "summary": "A short description of TVKit.",
-  "description": "",
+  "summary": "UI components for tvOS",
+  "description": "Highly customizable.\nSupports @IBDesignable to live-render the component in the Interface Builder.\nBy supporting @IBInspectable, the class properties can be exposed in the Interface Builder, and you can edit these properties in realtime.",
   "homepage": "https://github.com/jinSasaki/TVKit",
+  "screenshots": "https://raw.githubusercontent.com/jinSasaki/TVKit/master/Assets/slider.png",
   "license": "MIT",
   "authors": {
-    "Jin Sasaki": "aysm47@gmail.com"
+    "Jin Sasaki": "sasakky.j@gmail.com"
   },
   "source": {
     "git": "https://github.com/jinSasaki/TVKit.git",
@@ -14,7 +15,7 @@
   },
   "social_media_url": "https://twitter.com/sasakky_j",
   "platforms": {
-    "tvos": "9.1"
+    "tvos": "9.2"
   },
   "source_files": "TVKit/Classes/**/*",
   "resource_bundles": {
@@ -23,6 +24,5 @@
       "TVKit/Assets/*.xib"
     ]
   },
-  "requires_arc": true,
   "frameworks": "UIKit"
 }
