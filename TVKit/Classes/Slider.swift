@@ -14,32 +14,35 @@ public protocol SliderDelegate: class {
     func sliderDidTap(_ slider: Slider)
     func slider(_ slider: Slider, didChangeValue value: Double)
     func slider(_ slider: Slider, didUpdateFocusInContext context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator)
+    func sliderBeginScrubbing(_ slider : Slider)
+    func sliderEndScrubbing(_ slider : Slider, value : Double)
 }
 
 public extension SliderDelegate {
     func slider(_ slider: Slider, textWithValue value: Double) -> String { return "\(Int(value))" }
-
     func sliderDidTap(_ slider: Slider) {}
     func slider(_ slider: Slider, didChangeValue value: Double) {}
     func slider(_ slider: Slider, didUpdateFocusInContext context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {}
+    func sliderBeginScrubbing(_ slider : Slider){}
+    func sliderEndScrubbing(_ slider : Slider, value : Double){}
 }
 
-@IBDesignable
+
 open class Slider: UIView {
 
     // MARK: - Public
-    @IBInspectable open var value: Double = 0 {
+    open var value: Double = 0 {
         didSet {
             updateViews()
             delegate?.slider(self, didChangeValue: value)
         }
     }
-    @IBInspectable open var max: Double = 100 {
+    open var max: Double = 100 {
         didSet {
             updateViews()
         }
     }
-    @IBInspectable open var min: Double = 0 {
+    open var min: Double = 0 {
         didSet {
             updateViews()
         }
@@ -121,6 +124,8 @@ open class Slider: UIView {
                 self.seekLineView.layer.shadowOpacity = 0
                 }, completion: nil)
         }
+        
+        self.delegate?.slider(self, didUpdateFocusInContext: context, withAnimationCoordinator: coordinator)
     }
 
     // MARK: - Private
@@ -183,6 +188,7 @@ open class Slider: UIView {
         case .began:
             stopDeceleratingTimer()
             seekerViewLeadingConstraintConstant = seekerViewLeadingConstraint.constant
+            self.delegate?.sliderBeginScrubbing(self)
         case .changed:
             let leading = seekerViewLeadingConstraintConstant + translation.x / 5
             setValueWithPercentage(Double(leading / barView.frame.width))
@@ -192,6 +198,7 @@ open class Slider: UIView {
             let direction: CGFloat = velocity.x > 0 ? 1 : -1
             deceleratingVelocity = fabs(velocity.x) > decelerationMaxVelocity ? decelerationMaxVelocity * direction : velocity.x
             deceleratingTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(handleDeceleratingTimer(_:)), userInfo: nil, repeats: true)
+            self.delegate?.sliderEndScrubbing(self, value: self.value)            
         default:
             break
         }
